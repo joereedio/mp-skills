@@ -32,15 +32,15 @@ If the tickets came from [to-tickets](https://aihero.dev/skills-to-tickets), the
 
 A run is seven beats, in order:
 
-1. Read the ticket or spec and work out the seams.
+1. Read the ticket or spec, note the commit it starts from, and work out the seams.
 2. Drive [tdd](https://aihero.dev/skills-tdd) at the pre-agreed seams, one red-green slice at a time.
 3. Typecheck often, run single test files as it goes.
 4. Commit the work to the current branch.
-5. Run [code-review](https://aihero.dev/skills-code-review) against the commit the run started from.
+5. Run [code-review](https://aihero.dev/skills-code-review) against the commit noted in beat 1.
 6. Apply the review's fixes, re-running the affected single test files.
 7. Run the full test suite once, then commit the fixes.
 
-The full suite runs last, after the fixes, because a review fix is a change like any other. A suite run before the review describes a version that never gets committed, and it is the slowest check in the run. Committing before the review is what gives [code-review](https://aihero.dev/skills-code-review) a diff to look at. So a run leaves two commits: the work, then the review's fixes.
+The full suite runs last, after the fixes, because a review fix is a change like any other. A suite run before the review describes a version that never gets committed. Committing before the review is what gives [code-review](https://aihero.dev/skills-code-review) a diff to look at. The review covers this ticket's work only, not earlier tickets already on the branch. A run therefore leaves two commits, the work and then the review's fixes, or one when the review finds nothing to fix.
 
 One run covers one ticket. The tickets [to-tickets](https://aihero.dev/skills-to-tickets) produces are tracer-bullet vertical slices sized to fit a single fresh [context window](https://www.aihero.dev/ai-coding-dictionary/context-window), so the intended rhythm is: clear context, implement one ticket, commit, clear again. Each ticket is self-contained, which is what makes the previous ticket's context disposable.
 
@@ -66,13 +66,13 @@ Not built in. It commits straight to the current branch, which several people fi
 
 **`code-review` says it cannot see my changes.**
 
-`code-review` reviews `git diff <fixed-point>...HEAD`, which excludes staged and working-tree changes. Earlier versions of `implement` ran it before committing, so the diff was often empty. `implement` now commits the work first and reviews against the commit the run started from. If you still see this, check the fixed point: reviewing against the branch's current tip, or against a point after the work's commit, gives an empty diff too.
+`code-review` reviews `git diff <fixed-point>...HEAD`, which excludes staged and working-tree changes. Earlier versions of `implement` ran it before committing, so the diff was often empty. `implement` now commits the work first and reviews against the commit it noted before starting. If you still see this, check the fixed point: reviewing against the branch's current tip, or against a point after the work's commit, gives an empty diff too.
 
 Separately, some people deliberately do not want the review inside the run at all, because an agent reviewing the code it just wrote is biased toward its own solution. Running [code-review](https://aihero.dev/skills-code-review) in a fresh session against a fixed point is a legitimate alternative, and is the same reason that skill runs its two axes in separate sub-agents.
 
 **One ticket burned 150k tokens. Am I using it wrong?**
 
-Probably the ticket is too big rather than the skill being misused. A run does codebase exploration, a red-green loop per seam, a full suite, and a review, so a non-trivial ticket exceeding 100k [tokens](https://www.aihero.dev/ai-coding-dictionary/token) is normal rather than a sign something broke. The lever is upstream: right-size the tickets in [to-tickets](https://aihero.dev/skills-to-tickets) so each fits one fresh window. If a single ticket keeps blowing out, split it rather than raising the [effort](https://www.aihero.dev/ai-coding-dictionary/effort) level.
+Probably the ticket is too big rather than the skill being misused. A run does codebase exploration, a red-green loop per seam, a review, and a full suite, so a non-trivial ticket exceeding 100k [tokens](https://www.aihero.dev/ai-coding-dictionary/token) is normal rather than a sign something broke. The lever is upstream: right-size the tickets in [to-tickets](https://aihero.dev/skills-to-tickets) so each fits one fresh window. If a single ticket keeps blowing out, split it rather than raising the [effort](https://www.aihero.dev/ai-coding-dictionary/effort) level.
 
 **`/implement #2` in a fresh session worked on something completely unrelated.**
 
@@ -83,7 +83,7 @@ Probably the ticket is too big rather than the skill being misused. A run does c
 - The session opens by reading the ticket or spec and restating what it will build, rather than asking you what to build.
 - You can see an actual `/tdd` invocation in the trace, not just tests appearing in the diff.
 - Typechecks and single test files run repeatedly during the run, and the full suite runs once, after the review's fixes and right before the last commit.
-- The run leaves two commits, the work and then the review's fixes, and reports the full suite's result against the second.
+- The run reports the full suite's result against a named commit: the fixes' commit, or the work's when the review found nothing to fix.
 - The run reaches its commits on your current branch without you prompting it to carry on.
 - The diff is one ticket's worth of change: a vertical slice through every layer, not several tickets swept together.
 
