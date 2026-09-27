@@ -8,8 +8,10 @@ Implement the work described by the user in the spec or tickets.
 
 Use /tdd where possible, at pre-agreed seams.
 
-Run typechecking regularly, single test files regularly, and the full test suite once at the end.
+Run typechecking and single test files regularly as you work.
 
-Once done, use /code-review to review the work.
+Once done, commit your work to the current branch. Then use /code-review to review it against the commit you started from.
 
-Commit your work to the current branch.
+Apply the review's fixes, re-running the affected single test files: a fix is a change like any other.
+
+Then run the full test suite once, so it covers exactly what gets committed, and commit the fixes. Report the full suite's result together with the commit it ran against.
