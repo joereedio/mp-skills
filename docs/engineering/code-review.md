@@ -87,7 +87,7 @@ No. It diffs `<fixed-point>...HEAD`, three-dot, which is measured from the merge
 
 `code-review` is the review step at the tail of the build chain: `grill-with-docs → to-spec → to-tickets → implement → code-review`. It also stands alone on any branch or PR you point it at.
 
-- [implement](https://aihero.dev/skills-implement) is the closest neighbour: it drives the build and calls this skill as its own closing review before committing.
+- [implement](https://aihero.dev/skills-implement) is the closest neighbour: it drives the build, commits, then calls this skill on that commit and commits the fixes.
 - [to-spec](https://aihero.dev/skills-to-spec) and [to-tickets](https://aihero.dev/skills-to-tickets) produce the document the Spec axis checks against; a vague spec makes that axis vague.
 - [improve-codebase-architecture](https://aihero.dev/skills-improve-codebase-architecture) is the whole-codebase counterpart: this skill only ever looks at one diff.
 
